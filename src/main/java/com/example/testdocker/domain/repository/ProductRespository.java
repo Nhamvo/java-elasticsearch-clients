@@ -1,11 +1,9 @@
-package com.example.testdocker.repository;
+package com.example.testdocker.domain.repository;
 
-import com.example.testdocker.entity.Product;
+import com.example.testdocker.domain.entity.Product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface ProductRespository extends JpaRepository<Product, Long> {

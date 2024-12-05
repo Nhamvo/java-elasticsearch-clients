@@ -1,6 +1,7 @@
-package com.example.testdocker.entity;
+package com.example.testdocker.domain.entity;
 
 //import jakarta.persistence.*;
+import com.example.testdocker.domain.entity_listener.ProductEntityListener;
 import jakarta.persistence.*;
 import lombok.*;
 

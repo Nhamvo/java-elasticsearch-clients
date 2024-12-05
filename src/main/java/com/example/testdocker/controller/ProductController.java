@@ -1,8 +1,8 @@
 package com.example.testdocker.controller;
 
 
-import com.example.testdocker.entity.Product;
-import com.example.testdocker.service.ElasticsearchService;
+import com.example.testdocker.domain.entity.Product;
+import com.example.testdocker.service.elasticsearch.ProductElsService;
 import com.example.testdocker.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +18,13 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
-    private ElasticsearchService elasticsearchService;
+    private ProductElsService productElsService;
 
     // Create or Update Product
 
     @GetMapping()
     public List<Product> getAllProducts() throws IOException {
-        return elasticsearchService.getAllProducts();
+        return productElsService.getAllProducts();
     }
 
     @PostMapping
@@ -35,7 +35,7 @@ public class ProductController {
     // Get Product by ID
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable String id) throws IOException {
-        return elasticsearchService.getProductById(id);
+        return productElsService.getProductById(id);
     }
 
     // Update Product
@@ -53,7 +53,7 @@ public class ProductController {
     // Search Products
     @GetMapping("/search")
     public List<Product> searchProducts(@RequestParam String query) throws IOException {
-        return elasticsearchService.searchProducts(query);
+        return productElsService.searchProducts(query);
     }
 
     @GetMapping("/filter")
@@ -62,6 +62,6 @@ public class ProductController {
                                                      @RequestParam(required = false) String manufacturer,
                                                      @RequestParam(required = false) Double minPrice,
                                                      @RequestParam(required = false) Double maxPrice) throws IOException {
-        return elasticsearchService.multiInstanceSearchProducts(name, quantity, manufacturer, minPrice, maxPrice);
+        return productElsService.multiInstanceSearchProducts(name, quantity, manufacturer, minPrice, maxPrice);
     }
 }
