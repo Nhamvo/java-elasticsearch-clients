@@ -6,6 +6,7 @@ import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.example.testdocker.domain.entity.Order;
 import com.example.testdocker.domain.entity.Product;
+import com.example.testdocker.domain.respose.OrderResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class OrderElsService {
         // Tạo yêu cầu tìm kiếm không có điều kiện (lấy tất cả tài liệu)
         SearchRequest searchRequest = new SearchRequest.Builder()
                 .index("order")  // Chỉ định chỉ mục
-                .size(10000)  // Kích thước kết quả trả về (nếu cần thiết, có thể điều chỉnh)
+//              .size(10000)  // Kích thước kết quả trả về (nếu cần thiết, có thể điều chỉnh)
                 .build();
         // Thực thi tìm kiếm
         SearchResponse<Order> searchResponse = client.search(searchRequest, Order.class);
@@ -33,6 +34,22 @@ public class OrderElsService {
                 .map(Hit::source)  // Lấy source (dữ liệu) từ mỗi hit
                 .collect(Collectors.toList());
     }
+
+    public List<OrderResponse> getSelectedFieldsFromOrder() throws IOException {
+        // Tạo yêu cầu tìm kiếm và chỉ định các trường cần lấy
+        SearchRequest searchRequest = new SearchRequest.Builder()
+                .index("order")  // Chỉ định chỉ mục
+                .size(10000)     // Kích thước kết quả trả về
+                .source(s -> s.filter(f -> f.includes("quantity","userName"))) // Chỉ lấy các trường userName, quantity
+                .build();
+        // Thực thi tìm kiếm
+        SearchResponse<OrderResponse> searchResponse = client.search(searchRequest, OrderResponse.class);
+        // Trả về kết quả từ các trường được chỉ định
+        return searchResponse.hits().hits().stream()
+                .map(Hit::source)  // Lấy source (dữ liệu) từ mỗi hit
+                .collect(Collectors.toList());
+    }
+
 
     // Get Product by ID
     public Order getOrderById(String id) throws IOException {
@@ -63,7 +80,6 @@ public class OrderElsService {
         );
         client.update(request, Order.class);
     }
-
 
     // Xóa order khỏi Elasticsearch
     @Transactional

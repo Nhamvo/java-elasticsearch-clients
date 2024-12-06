@@ -4,6 +4,7 @@ package com.example.testdocker.controller;
 import com.example.testdocker.domain.entity.Order;
 import com.example.testdocker.domain.entity.Product;
 import com.example.testdocker.domain.request.OrderRequest;
+import com.example.testdocker.domain.respose.OrderResponse;
 import com.example.testdocker.service.OrderService;
 import com.example.testdocker.service.elasticsearch.OrderElsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class OrderController {
     @GetMapping()
     public List<Order> getAllProducts() throws IOException {
         return orderElsService.getAllOrder();
+    }
+
+    @GetMapping("/data")
+    public List<OrderResponse> getSelectedFieldsFromOrder() throws IOException {
+        return orderElsService.getSelectedFieldsFromOrder();
     }
 
     // Get Order by ID
